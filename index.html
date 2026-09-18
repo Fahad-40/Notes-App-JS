@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium Notes Architecture</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome Icons CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Inter Font & Tailwind Config -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        zinc: {
+                            850: '#1f2024',
+                            900: '#18181b',
+                            950: '#09090b',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Smooth scrolling and base font rendering optimizations */
+        html { scroll-behavior: smooth; }
+        body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+        
+        /* Custom subtle scrollbar for the textarea */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #3f3f46; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #52525b; }
+    </style>
+</head>
+<body class="bg-zinc-950 text-zinc-300 font-sans min-h-screen relative overflow-x-hidden selection:bg-indigo-500/30 selection:text-indigo-200">
+
+    <!-- Premium App Navigation/Header -->
+    <header id="app-header" class="header-container sticky top-0 z-30 bg-zinc-950/80 backdrop-blur-md border-b border-zinc-800/80 shadow-sm shadow-black/20">
+        <div class="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="logo-icon-wrapper bg-indigo-500/10 text-indigo-400 p-2.5 rounded-xl border border-indigo-500/20 shadow-[0_0_15px_rgba(99,102,241,0.15)]">
+                    <i class="fas fa-layer-group text-lg"></i>
+                </div>
+                <h1 class="app-brand-title text-xl font-bold text-zinc-100 tracking-wide">Nexus<span class="text-indigo-400 font-medium">Notes</span></h1>
+            </div>
+            <div class="header-actions flex gap-4">
+                <button id="search-trigger-btn" class="search-btn text-zinc-400 hover:text-zinc-100 transition-colors w-10 h-10 rounded-full hover:bg-zinc-800 flex items-center justify-center">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Workspace Container -->
+    <main id="main-workspace" class="max-w-7xl mx-auto px-6 py-10 flex flex-col gap-12">
+        
+        <!-- Recently Used Section -->
+        <section id="recent-notes-section" class="recent-notes-container flex flex-col gap-6">
+            <div class="section-header flex items-center gap-3 text-zinc-100">
+                <i class="fas fa-history text-indigo-400 text-sm"></i>
+                <h2 class="section-title text-lg font-semibold tracking-wide">Recently Edited</h2>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Dummy Note Card 1 (Recent) -->
+                <article id="note-card-1" class="note-card bg-zinc-900 rounded-xl p-5 border border-zinc-800 cursor-pointer hover:border-indigo-500 transition-all flex flex-col h-52 hover:-translate-y-1 hover:shadow-lg hover:shadow-indigo-500/10 group relative overflow-hidden">
+                    <p class="note-card-content text-zinc-400 text-sm line-clamp-3 mb-4 leading-relaxed">
+                        Finalized the API architecture for the new authentication microservice. Need to ensure JWT tokens are stored securely in HTTP-only cookies rather than local storage to prevent XSS attacks.
+                    </p>
+                    <h3 class="note-card-title text-zinc-100 font-semibold mt-auto truncate pr-4 group-hover:text-indigo-300 transition-colors">Auth Service Architecture</h3>
+                    
+                    <div class="note-card-meta flex items-center justify-between mt-3 pt-3 border-t border-zinc-800/60">
+                        <span class="note-date text-xs text-zinc-500 font-medium tracking-wide">Just now</span>
+                        <i class="fas fa-arrow-right text-zinc-600 opacity-0 group-hover:opacity-100 group-hover:text-indigo-400 transition-all text-xs -translate-x-2 group-hover:translate-x-0"></i>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <!-- All Notes Grid Section -->
+        <section class="all-notes-wrapper flex flex-col gap-6">
+            <div class="section-header flex items-center gap-3 text-zinc-100">
+                <i class="fas fa-folder text-indigo-400 text-sm"></i>
+                <h2 class="section-title text-lg font-semibold tracking-wide">All Notes</h2>
+            </div>
+            
+            <div id="all-notes-grid" class="notes-grid-container grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                
+                <!-- Dummy Note Card 2 (All Notes) -->
+                <article id="note-card-2" class="note-card bg-zinc-900 rounded-xl p-5 border border-zinc-800 cursor-pointer hover:border-indigo-500 transition-all flex flex-col h-52 hover:-translate-y-1 hover:shadow-lg hover:shadow-indigo-500/10 group relative overflow-hidden">
+                    <p class="note-card-content text-zinc-400 text-sm line-clamp-3 mb-4 leading-relaxed">
+                        UI components needed for the dashboard: 1. Sidebar navigation (collapsible). 2. Top-level metric cards with sparkline charts. 3. Data table with sorting and filtering capabilities built-in.
+                    </p>
+                    <h3 class="note-card-title text-zinc-100 font-semibold mt-auto truncate pr-4 group-hover:text-indigo-300 transition-colors">Dashboard UI Checklist</h3>
+                    
+                    <div class="note-card-meta flex items-center justify-between mt-3 pt-3 border-t border-zinc-800/60">
+                        <span class="note-date text-xs text-zinc-500 font-medium tracking-wide">Oct 24, 2023</span>
+                        <i class="fas fa-arrow-right text-zinc-600 opacity-0 group-hover:opacity-100 group-hover:text-indigo-400 transition-all text-xs -translate-x-2 group-hover:translate-x-0"></i>
+                    </div>
+                </article>
+
+            </div>
+        </section>
+    </main>
+
+    <!-- Glowing Premium Floating Action Button -->
+    <button id="create-note-fab" class="create-note-trigger fixed bottom-10 right-10 w-16 h-16 bg-indigo-600 hover:bg-indigo-500 text-zinc-50 rounded-full flex items-center justify-center shadow-[0_0_30px_rgba(79,70,229,0.4)] hover:shadow-[0_0_40px_rgba(99,102,241,0.6)] transition-all duration-300 hover:scale-105 active:scale-95 z-40 group focus:outline-none focus:ring-4 focus:ring-indigo-500/30">
+        <i class="fas fa-plus text-2xl group-hover:rotate-90 transition-transform duration-300"></i>
+    </button>
+
+    <!-- Absolute Overlay Modal Component -->
+    <div id="note-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 backdrop-blur-sm bg-black/60 transition-opacity duration-300 ease-out">
+        
+        <!-- Modal Card Container -->
+        <div class="modal-dialog-box bg-zinc-900 border border-zinc-800 rounded-2xl w-full max-w-3xl shadow-2xl shadow-black p-6 flex flex-col relative transform transition-all">
+            
+            <!-- Modal Header area -->
+            <div class="modal-header-section flex justify-between items-start mb-2 border-b border-zinc-800/50 pb-4">
+                <input 
+                    type="text" 
+                    id="modal-title-input" 
+                    class="note-modal-title bg-transparent text-2xl font-bold text-zinc-100 outline-none w-full placeholder-zinc-700 focus:text-indigo-50 transition-colors" 
+                    placeholder="Untitled Note..."
+                    autocomplete="off"
+                >
+                <button 
+                    id="modal-close-btn" 
+                    class="modal-close-trigger text-zinc-400 hover:text-zinc-100 ml-6 w-8 h-8 rounded-full flex items-center justify-center hover:bg-zinc-800 transition-all focus:outline-none flex-shrink-0"
+                    aria-label="Close modal"
+                >
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+
+            <!-- Modal Content Area -->
+            <div class="modal-body-section flex-grow">
+                <textarea 
+                    id="modal-content-textarea" 
+                    class="note-modal-textarea bg-transparent text-zinc-300 outline-none w-full h-64 sm:h-80 resize-none mt-4 placeholder-zinc-700 leading-relaxed font-normal" 
+                    placeholder="Start typing your ideas here..."
+                ></textarea>
+            </div>
+
+            <!-- Modal Footer / Actions -->
+            <div class="modal-footer-section mt-4 pt-4 border-t border-zinc-800/50 flex justify-end gap-3 items-center">
+                <span class="saved-status-indicator text-xs text-zinc-500 font-medium mr-auto tracking-wide hidden">
+                    <i class="fas fa-check-circle text-emerald-500 mr-1"></i> Saved to cloud
+                </span>
+                <button id="modal-cancel-btn" class="modal-cancel-action px-5 py-2.5 rounded-lg font-medium text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800 transition-colors focus:outline-none">
+                    Cancel
+                </button>
+                <button id="modal-save-btn" class="modal-save-action bg-indigo-600 hover:bg-indigo-500 text-white px-6 py-2.5 rounded-lg font-medium shadow-lg shadow-indigo-500/20 transition-all active:scale-95 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:ring-offset-2 focus:ring-offset-zinc-900">
+                    Save Note
+                </button>
+            </div>
+            
+        </div>
+    </div>
+
+</body>
+</html>
